@@ -10,7 +10,7 @@ env/
 ENV/
 
 # Configuration (★ 하위 폴더의 config.py까지 완벽 차단)
-**/config.py
+**/local_config.py
 .env
 
 # IDEs and editors (★ 파이참 설정 폴더 완벽 차단)

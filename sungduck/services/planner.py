@@ -29,8 +29,8 @@ def calculate_timeline(start_time_str, start_name, start_address, start_lon, sta
         "place": start_name,
         "address": start_address,
         "activity": f"카카오 길찾기 기준 실제 이동 시간 약 {drive_to_dest}분 소요",
-        "cx": start_lon,
-        "cy": start_lat,
+        "longitude": start_lon,
+        "latitude": start_lat,
     })
     current_time = dest_arrival_time
 
@@ -42,8 +42,8 @@ def calculate_timeline(start_time_str, start_name, start_address, start_lon, sta
         "place": dest_name,
         "address": dest_address,
         "activity": "메인 일정 수행",
-        "cx": dest_lon,
-        "cy": dest_lat
+        "longitude": dest_lon,
+        "latitude": dest_lat
     })
     current_time = dest_end_time
 
@@ -58,8 +58,8 @@ def calculate_timeline(start_time_str, start_name, start_address, start_lon, sta
         "place": f"{selected_retail['name']} ({selected_retail['category']})",
         "address": selected_retail["address"],
         "activity": f"이동({drive_to_retail}분) 후 소품샵/옷가게 구경 및 가치 소비",
-        "cx": float(selected_retail["lon"]),
-        "cy": float(selected_retail["lat"])
+        "longitude": float(selected_retail["lon"]),
+        "latitude": float(selected_retail["lat"])
     })
     current_time = retail_end_time
 
@@ -75,8 +75,8 @@ def calculate_timeline(start_time_str, start_name, start_address, start_lon, sta
         "place": f"{selected_food['name']} ({selected_food['category']})",
         "address": selected_food["address"],
         "activity": f"이동({drive_to_food}분) 후 지역 맛집에서 맛있는 식사",
-        "cx": float(selected_food["lon"]),
-        "cy": float(selected_food["lat"])
+        "longitude": float(selected_food["lon"]),
+        "latitude": float(selected_food["lat"])
     })
     current_time = food_end_time
 
@@ -92,8 +92,8 @@ def calculate_timeline(start_time_str, start_name, start_address, start_lon, sta
         "place": f"{selected_cafe['name']} ({selected_cafe['category']})",
         "address": selected_cafe["address"],
         "activity": f"이동({drive_to_cafe}분) 후 감성 로컬 카페에서 디저트 및 티타임",
-        "cx": float(selected_cafe["lon"]),
-        "cy": float(selected_cafe["lat"])
+        "longitude": float(selected_cafe["lon"]),
+        "latitude": float(selected_cafe["lat"])
     })
 
     return timeline
