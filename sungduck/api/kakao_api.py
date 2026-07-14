@@ -36,7 +36,7 @@ def get_driving_duration_minutes(origin_lon, origin_lat, dest_lon, dest_lat):
 def get_coords_from_address(address_name):
     """
     지명이나 상세주소 텍스트를 받아 카카오 로컬 API로
-    (위도, 경도, 실제 장소명)을 반환합니다.
+    (경도, 위도, 실제 장소명, 실제 주소)를 반환합니다.
     """
     url = "https://dapi.kakao.com/v2/local/search/keyword.json"
     headers = {"Authorization": f"KakaoAK {KAKAO_REST_API_KEY}"}
@@ -46,8 +46,12 @@ def get_coords_from_address(address_name):
         response = requests.get(url, headers=headers, params=params).json()
         if response.get("documents"):
             doc = response["documents"][0]
-            # x는 경도(lon), y는 위도(lat), place_name은 카카오가 찾은 실제 이름
-            return float(doc["x"]), float(doc["y"]), doc["place_name"]
+
+            # 도로명 주소가 있으면 사용하고, 없으면 일반 지번 주소를 가져옵니다.
+            real_address = doc.get("road_address_name") or doc.get("address_name") or address_name
+
+            # x는 경도(lon), y는 위도(lat), place_name은 실제 이름, real_address는 실제 주소
+            return float(doc["x"]), float(doc["y"]), doc["place_name"], real_address
     except Exception as e:
         print(f"[Kakao Geo Error] {e}")
-    return None, None, None
+    return None, None, None, None

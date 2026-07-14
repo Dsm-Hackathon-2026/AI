@@ -3,8 +3,8 @@ from api.kakao_api import get_driving_duration_minutes
 
 
 # 1. 매개변수에 start_name, start_lon, start_lat를 추가합니다.
-def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
-                       dest_name, dest_lon, dest_lat,
+def calculate_timeline(start_time_str, start_name, start_address, start_lon, start_lat,
+                       dest_name, dest_address, dest_lon, dest_lat,
                        selected_retail, selected_food, selected_cafe):
     """
     각 장소의 체류 시간과 카카오 길찾기 API의 이동 시간을 조합하여
@@ -26,8 +26,11 @@ def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
     # 타임라인에 첫 이동 정보 기록
     timeline.append({
         "time": f"{current_time.strftime('%H:%M')} ~ {dest_arrival_time.strftime('%H:%M')}",
-        "place": f"🚗 {start_name} ➡️ {dest_name} 이동",
-        "activity": f"카카오 길찾기 기준 실제 이동 시간 약 {drive_to_dest}분 소요"
+        "place": start_name,
+        "address": start_address,
+        "activity": f"카카오 길찾기 기준 실제 이동 시간 약 {drive_to_dest}분 소요",
+        "cx": start_lon,
+        "cy": start_lat,
     })
     current_time = dest_arrival_time
 
@@ -37,7 +40,10 @@ def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
     timeline.append({
         "time": f"{current_time.strftime('%H:%M')} ~ {dest_end_time.strftime('%H:%M')}",
         "place": dest_name,
-        "activity": "메인 일정 수행 (업무/진료/관광 등)"
+        "address": dest_address,
+        "activity": "메인 일정 수행",
+        "cx": dest_lon,
+        "cy": dest_lat
     })
     current_time = dest_end_time
 
@@ -49,9 +55,11 @@ def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
     retail_end_time = current_time + timedelta(minutes=retail_duration)
     timeline.append({
         "time": f"{current_time.strftime('%H:%M')} ~ {retail_end_time.strftime('%H:%M')}",
-        "place": f"🛍️ {selected_retail['name']} ({selected_retail['category']})",
-        "activity": f"이동({drive_to_retail}분) 후 소상공인 소품샵/옷가게 구경 및 가치 소비",
-        "address": selected_retail["address"]
+        "place": f"{selected_retail['name']} ({selected_retail['category']})",
+        "address": selected_retail["address"],
+        "activity": f"이동({drive_to_retail}분) 후 소품샵/옷가게 구경 및 가치 소비",
+        "cx": float(selected_retail["lon"]),
+        "cy": float(selected_retail["lat"])
     })
     current_time = retail_end_time
 
@@ -64,9 +72,11 @@ def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
     food_end_time = current_time + timedelta(minutes=food_duration)
     timeline.append({
         "time": f"{current_time.strftime('%H:%M')} ~ {food_end_time.strftime('%H:%M')}",
-        "place": f"🍽️ {selected_food['name']} ({selected_food['category']})",
+        "place": f"{selected_food['name']} ({selected_food['category']})",
         "address": selected_food["address"],
-        "activity": f"이동({drive_to_food}분) 후 지역 맛집에서 맛있는 식사"
+        "activity": f"이동({drive_to_food}분) 후 지역 맛집에서 맛있는 식사",
+        "cx": float(selected_food["lon"]),
+        "cy": float(selected_food["lat"])
     })
     current_time = food_end_time
 
@@ -79,9 +89,11 @@ def calculate_timeline(start_time_str, start_name, start_lon, start_lat,
     cafe_end_time = current_time + timedelta(minutes=cafe_duration)
     timeline.append({
         "time": f"{current_time.strftime('%H:%M')} ~ {cafe_end_time.strftime('%H:%M')}",
-        "place": f"☕ {selected_cafe['name']} ({selected_cafe['category']})",
+        "place": f"{selected_cafe['name']} ({selected_cafe['category']})",
         "address": selected_cafe["address"],
-        "activity": f"이동({drive_to_cafe}분) 후 감성 로컬 카페에서 디저트 및 티타임"
+        "activity": f"이동({drive_to_cafe}분) 후 감성 로컬 카페에서 디저트 및 티타임",
+        "cx": float(selected_cafe["lon"]),
+        "cy": float(selected_cafe["lat"])
     })
 
     return timeline

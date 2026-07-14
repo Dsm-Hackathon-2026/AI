@@ -29,8 +29,8 @@ def read_root():
 def generate_plan(request: PlannerRequest):
     try:
         # [Step 0] 두 주소 텍스트를 변환하면서 카카오가 찾은 진짜 이름(place_name)도 받아옵니다.
-        start_lon, start_lat, kakao_start_name = get_coords_from_address(request.start_address)
-        dest_lon, dest_lat, kakao_dest_name = get_coords_from_address(request.dest_address)
+        start_lon, start_lat, kakao_start_name, kakao_start_address = get_coords_from_address(request.start_address)
+        dest_lon, dest_lat, kakao_dest_name, kakao_dest_address = get_coords_from_address(request.dest_address)
 
         if not start_lon or not dest_lon:
             raise HTTPException(
@@ -86,9 +86,11 @@ def generate_plan(request: PlannerRequest):
         final_timeline = calculate_timeline(
             start_time_str=request.start_time,
             start_name=short_start_name,
+            start_address=kakao_start_address,
             start_lon=start_lon,
             start_lat=start_lat,
             dest_name=short_dest_name,
+            dest_address=kakao_dest_address,
             dest_lon=dest_lon,
             dest_lat=dest_lat,
             selected_retail=selected_retail,
