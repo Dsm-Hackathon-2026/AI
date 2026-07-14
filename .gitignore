@@ -1,0 +1,27 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments (가상환경 폴더 제외)
+.venv/
+venv/
+env/
+ENV/
+
+# Configuration (★ 하위 폴더의 config.py까지 완벽 차단)
+**/config.py
+.env
+
+# IDEs and editors (★ 파이참 설정 폴더 완벽 차단)
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS Files
+.DS_Store
+Thumbs.db
